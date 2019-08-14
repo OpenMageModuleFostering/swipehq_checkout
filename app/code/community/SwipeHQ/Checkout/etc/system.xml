@@ -5,7 +5,7 @@
       <groups>
         <swipehq translate="label comment" module="paygate">
           <label>Swipe Checkout</label>
-          <comment><![CDATA[<a href="http://www.swipehq.com/support/support_detail.php?cat=General+Questions&title=Becoming+a+Swipe+HQ+Checkout+merchant" target="_blank">Click here to see how to become a SwipeHQ Checkout merchant</a>
+          <comment><![CDATA[<a href="https://www.swipehq.com/support/support_detail.php?cat=General+Questions&title=Becoming+a+Swipe+Merchant" target="_blank">Click here to see how to become a SwipeHQ Checkout merchant</a>
               <script>
                   function check_config(){
                       var elementToRemove = document.getElementById("check_config_results");

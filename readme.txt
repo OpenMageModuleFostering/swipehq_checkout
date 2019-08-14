@@ -1,7 +1,7 @@
 Swipe Checkout for Magento
 
-Version:	1.7.1 / 24 July 2014
-Copyright:	(c) 2012-2014, Optimizer Ltd.
+Version:	1.7.2 / 14 April 2015
+Copyright:	(c) 2012-2015, Optimizer Ltd.
 Link:		http://www.swipehq.com/
 			http://www.magentocommerce.com/magento-connect/catalog/product/view/id/15121/
 
@@ -65,3 +65,6 @@ CHANGE LOG
 
 1.7.1:
 - Pass customer email to SwipeHQ payment page and tested against Magento 1.9.0.1
+
+1.7.2:
+- updated SwipeHQ payment page and tested against Magento 1.9.0.1
