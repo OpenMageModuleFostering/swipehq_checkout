@@ -109,7 +109,8 @@ try{
 		#test_config_table th { text-align: left; background: lightblue; }
 		#test_config_table td { font-size: 12px; }
 		#test_config_table table { border-collapse: collapse; }
-		#test_config_table td, th { padding: 1em 0.5em; border: 1px solid #aaa; }
+		#test_config_table tr td { padding: 1em 0.5em; border: 1px solid #aaa; }
+                #test_config_table tr th { padding: 1em 0.5em; border: 1px solid #aaa; }
 		#test_config_table .test-title { white-space: nowrap; font-weight: bold; }
 		#test_config_table .test-result { white-space: nowrap; }
 		#test_config_table .technical-details { color: #888; margin: 1em; padding: 0.5em; border: 1px solid #aaa; }

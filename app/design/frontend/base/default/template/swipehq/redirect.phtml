@@ -10,7 +10,7 @@ if (!empty($identifier_id) && $payment_page_url) {
     <img src="http://www.swipehq.com/images/checkout-logo.png" width="178" height="76" />
   	<p>To complete your order, please click Pay Now below, you will be redirected to the secure Swipe Checkout payment page.</p>
     
-    <form name="swipehq_checkout_form" method="post" action="<?=$payment_page_url?>">
+    <form name="swipehq_checkout_form" method="post" action="<?php echo $payment_page_url; ?>">
         <input type="hidden" name="checkout" value="true" />
         <input type="hidden" name="identifier_id" value="<?php echo $identifier_id; ?>" />
         <button type="submit">Pay Now</button>

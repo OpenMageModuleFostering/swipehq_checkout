@@ -1,9 +1,9 @@
-Swipe HQ Checkout plugin for Magento E-Commerce
+Swipe Checkout for Magento
 
-Version:	1.4.0 / 20 Sep 2013
+Version:	1.5.0 / 3 Dec 2013
 Copyright:	(c) 2012-2013, Optimizer Ltd.
 Link:		http://www.swipehq.com/checkout/
-
+			http://www.magentocommerce.com/magento-connect/catalog/product/view/id/15121/
 
 
 REQUIREMENTS
@@ -17,8 +17,7 @@ INSTALLATION
 ---
 
 1. Please install this extension through the normal Magento installation process (System -> Magento Connect -> Magento Connect Manager, then
-	Install New Extensions, grabbing the key from http://www.magentocommerce.com/magento-connect/catalog/product/view/id/15121/ or Direct 
-	Package File Upload, selecting this zip)
+	Install New Extensions, grabbing the key from the plugin page linked above or Direct Package File Upload, selecting this zip)
 2. After successful installation it will appear in the list of Packages as "SwipeHQ_Checkout"
 3. Then configure the plugin, go back to the Magento Admin, then go to System -> Configuration -> Sales -> Payment Methods -> Swipe Checkout, 
 	adding the following details from your Swipe Merchant login under Settings -> API Credentials:
@@ -54,3 +53,6 @@ CHANGE LOG
 
 1.4.0:
 - Added test configuration button, fixed bug in package.xml file and added the missing file Permittedorderstates.php in Model directory
+
+1.5.0:
+- Fixing bug, changed php short tag to long tag
