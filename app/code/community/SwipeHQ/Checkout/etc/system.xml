@@ -25,21 +25,8 @@
                       var apiURL = $("payment_swipehq_api_url").value;
                       var paymentURL = $("payment_swipehq_payment_page_url").value;
               
-              
-                      var currentURL = document.URL;
-                      var urlToLoad = null;
-                      var indexFound = currentURL.indexOf("index.php");
-              
-                      if(indexFound!=-1){
-                          urlToLoad = currentURL.substring(0, indexFound)+"app/code/community/SwipeHQ/Checkout/etc/test-plugin.php?merchant_id="+merchantId+"&api_key="+apiKey+"&api_url="+apiURL+"&payment_page_url="+paymentURL;
-                      }
-              
-                      
-
-                      
-                      if(urlToLoad!=null){
-                          processAjax(urlToLoad);
-                      }
+                      var urlToLoad = "../../../../../../../swipehq/payment/testconfig?merchant_id="+merchantId+"&api_key="+apiKey+"&api_url="+apiURL+"&payment_page_url="+paymentURL;
+					  processAjax(urlToLoad);
 
                       function processAjax(url) {
                           var req = null;

@@ -131,7 +131,11 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
                 }
             }
 	}
-        
+	
+	public function testConfigAction(){
+		include __DIR__ . '/../etc/test-plugin.php';
+	}
+	
         /**
          * Transaction verification
          * 
