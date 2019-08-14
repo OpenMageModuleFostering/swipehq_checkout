@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/SwipeHQ_Checkout",
+    "type": "magento-module",
+    "license": "GNU-General-Public-License-(GPL)",
+    "homepage": "",
+    "description": "Swipe Checkout payment method",
+    "authors": [
+    {
+        "name": "Optimizer Ltd.",
+        "email": "support@swipehq.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <SwipeHQ_Checkout>
+            <active>true</active>
+            <codePool>community</codePool>
+        </SwipeHQ_Checkout>
+    </modules>
+</config>
