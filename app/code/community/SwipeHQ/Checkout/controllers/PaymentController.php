@@ -22,13 +22,12 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
             
             $acceptedCurrencies = $this->_getAcceptedCurrencies();
 
-        	if($acceptedCurrencies && !in_array($currency, $acceptedCurrencies)){
-           
-            Mage::getSingleton('checkout/session')->addError('Swipe Checkout does not support currency: '.$currency.'. Swipe supports these currencies: '.join(', ', $acceptedCurrencies).'.');
-            session_write_close(); //THIS LINE IS VERY IMPORTANT!
-            $this->_redirect('checkout/cart');
-        }
-          
+            if($acceptedCurrencies && !in_array($currency, $acceptedCurrencies)){
+                Mage::getSingleton('checkout/session')->addError('Swipe Checkout does not support currency: '.$currency.'. Swipe supports these currencies: '.join(', ', $acceptedCurrencies).'.');
+                session_write_close(); //THIS LINE IS VERY IMPORTANT!
+                $this->_redirect('checkout/cart');
+            }
+            
             
             if (in_array($currency, $acceptedCurrencies)) {
                 $orderTotal = $orderData['grand_total'];
@@ -41,6 +40,8 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
                     $name = $item->getProduct()->getName();
                     $products .= $qty . ' x ' . $name . ($item != end($items) ? '<br />' : '');
                 }
+                
+                $customer_email = $orderData['customer_email'];
 
                 //get identifier ID using TransactionIdentifier API
                 $params = array (
@@ -53,6 +54,10 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
                     'td_default_quantity'   => 1,
                     'td_user_data'          => $orderId
                 );
+                
+                if(!empty($customer_email)){
+                    $params['td_email'] = $customer_email;
+                }
 
                 $response = $this->_sendRequest($api_url.'/createTransactionIdentifier.php', $params);
                 $response_data = json_decode($response); 
