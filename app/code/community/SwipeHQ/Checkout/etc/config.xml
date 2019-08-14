@@ -2,7 +2,7 @@
 <config>
   <modules>
     <SwipeHQ_Checkout>
-      <version>1.0.0</version><!-- todo: what's the point of this version number? where is it used? -->
+      <version>1.7.0</version><!-- todo: what's the point of this version number? where is it used? -->
     </SwipeHQ_Checkout>
   </modules>
   <global>

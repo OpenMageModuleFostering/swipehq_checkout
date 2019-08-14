@@ -30,6 +30,13 @@ function testResultHtml($result){
 	}
 }
 
+$_order = new Mage_Sales_Model_Order();
+$orderId = Mage::getSingleton('checkout/session')->getLastRealOrderId();
+$_order->loadByIncrementId($orderId);
+
+$orderData = $_order->getData();
+$currency = !empty($orderData['order_currency_code']) ? $orderData['order_currency_code'] : false;
+
 
 
 
@@ -42,7 +49,6 @@ $merchantId 		= isset($_REQUEST['merchant_id']) ? $_REQUEST['merchant_id'] : nul
 $apiKey 			= isset($_REQUEST['api_key']) ? $_REQUEST['api_key'] : null;
 $apiUrl 			= isset($_REQUEST['api_url']) ? $_REQUEST['api_url'] : null;
 $paymentPageUrl 	= isset($_REQUEST['payment_page_url']) ? $_REQUEST['payment_page_url'] : null;
-$currency 			= isset($_REQUEST['currency']) ? $_REQUEST['currency'] : null;
 
 
 

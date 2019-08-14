@@ -1,8 +1,8 @@
 Swipe Checkout for Magento
 
-Version:	1.6.0 / 3 Dec 2013
-Copyright:	(c) 2012-2013, Optimizer Ltd.
-Link:		http://www.swipehq.com/checkout/
+Version:	1.7.0 / 6 May 2014
+Copyright:	(c) 2012-2014, Optimizer Ltd.
+Link:		http://www.swipehq.com/
 			http://www.magentocommerce.com/magento-connect/catalog/product/view/id/15121/
 
 
@@ -60,4 +60,5 @@ CHANGE LOG
 1.6.0:
 - Fixing issue with check config for installs with .htaccess enabled which deny direct access to magento files
 
- 
+1.7.0:
+- Bug fixes for updating order status

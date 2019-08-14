@@ -1,9 +1,8 @@
 <?php
-/**
+/*
  * Swipe Checkout Controller
- * 
- * @copyright (c) 2012-2013, OptimizerHQ Ltd.
- * @link http://www.swipehq.com/checkout/
+ * @copyright (c) 2012-2014, OptimizerHQ Ltd.
+ * @link http://www.swipehq.com/
 */
 
 class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Action {
@@ -22,6 +21,14 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
             $currency = !empty($orderData['order_currency_code']) ? $orderData['order_currency_code'] : false;
             
             $acceptedCurrencies = $this->_getAcceptedCurrencies();
+
+        	if($acceptedCurrencies && !in_array($currency, $acceptedCurrencies)){
+           
+            Mage::getSingleton('checkout/session')->addError('Swipe Checkout does not support currency: '.$currency.'. Swipe supports these currencies: '.join(', ', $acceptedCurrencies).'.');
+            session_write_close(); //THIS LINE IS VERY IMPORTANT!
+            $this->_redirect('checkout/cart');
+        }
+          
             
             if (in_array($currency, $acceptedCurrencies)) {
                 $orderTotal = $orderData['grand_total'];
@@ -94,7 +101,7 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
                     if($order->isStateProtected($order_status)){
                     	Mage::throwException('Swipe configuration error: "Paid Order Status" must not be: "'.$order_status.'". Failed to change state.');
                     }else{
-                    	$order->setState($order_status, true, 'Swipe has authorized the payment.');
+                    	$order->setState($order_status, true, 'Swipe has authorized the payment.')->save();
                     }
 
                     $order->sendNewOrderEmail();
@@ -102,16 +109,17 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
 
                     $order->save();
 
-                    Mage::getSingleton('checkout/session')->unsQuoteId();
+                    //Mage::getSingleton('checkout/session')->unsQuoteId();
                 } else {
                     // There is a problem in the response we got
-                    $this->cancelAction();
+                    $this->cancelAction($order_id);
                 }
                 die('LPN OK, transaction_id: '.$transaction_id.', is_verified: '.($is_verified?'y':'n'));
                 
             //Result page (user redirect)
             } elseif (isset($request['result']) && isset($request['user_data'])) { 
                 if ($request['result'] == 'accepted' || $request['result'] == 'test-accepted') {
+                    Mage::getSingleton('checkout/session')->unsQuoteId();
                     Mage_Core_Controller_Varien_Action::_redirect('checkout/onepage/success', array('_secure'=>true)); 
                 } elseif ($request['result'] == 'declined' || $request['result'] == 'test-declined') {
                     Mage_Core_Controller_Varien_Action::_redirect('checkout/onepage/failure', array('_secure'=>true));
@@ -122,11 +130,26 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
 	}
 	
 	// The cancel action is triggered when an order is to be cancelled
-	public function cancelAction() {
-            if (Mage::getSingleton('checkout/session')->getLastRealOrderId()) {
-                $order = Mage::getModel('sales/order')->loadByIncrementId(Mage::getSingleton('checkout/session')->getLastRealOrderId());
-                if($order->getId()) {
-                    // Flag the order as 'cancelled' and save it
+	public function cancelAction($order_id) {
+            
+            $testMode = Mage::getStoreConfig('payment/swipehq/test_mode');
+            
+            
+            $order = Mage::getModel('sales/order');
+            $order->loadByIncrementId($order_id);
+            if (!$order->getId()) {
+                Mage::throwException('No order for processing found');
+            }
+            else{
+                if ($testMode) {
+                    $order_status = Mage::getStoreConfig('payment/swipehq/test_order_status');
+                    if($order->isStateProtected($order_status)){
+                        Mage::throwException('Swipe configuration error: "Paid Order Status" must not be: "'.$order_status.'". Failed to change state.');
+                    }else{
+                        $order->setState($order_status, true, 'Swipe has declined the payment.')->save();
+                    }
+                }
+                else{
                     $order->cancel()->setState(Mage_Sales_Model_Order::STATE_CANCELED, true, 'Gateway has declined the payment.')->save();
                 }
             }
@@ -165,19 +188,36 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
             }
             return false;
         }
-        
-        protected function _getAcceptedCurrencies(){
+		
+		   protected function _getAcceptedCurrencies(){
         	$api_url = trim(Mage::getStoreConfig('payment/swipehq/api_url'), '/');
+			$merchant_id = trim(Mage::getStoreConfig('payment/swipehq/merchant_id'), '/');
+			$api_key = trim(Mage::getStoreConfig('payment/swipehq/api_key'), '/');
         	
-        	$params = array(
+        	/*$params = array(
 	        	'merchant_id' 	=> Mage::getStoreConfig('payment/swipehq/merchant_id'),
 	        	'api_key' 		=> Mage::getStoreConfig('payment/swipehq/api_key'),
         	);
         	
         	$resp = $this->_sendRequest($api_url.'/fetchCurrencyCodes.php', $params);
         	$respArr = json_decode($resp, true);
+        	return $respArr['data'];*/
+			
+			if($api_url && $api_key && $merchant_id){
+    		$params = array(
+	        	'merchant_id' 	=> Mage::getStoreConfig('payment/swipehq/merchant_id'),
+	        	'api_key' 		=> Mage::getStoreConfig('payment/swipehq/api_key'),
+        	);
+    		$resp = $this->_sendRequest($api_url.'/fetchCurrencyCodes.php', $params);
+        	$respArr = json_decode($resp, true);
         	return $respArr['data'];
+    	}else{
+    		return null;
+    	}
+			
         }
+
+
         
         private function _sendRequest($url, $data) {
              $ch = curl_init ($url);
