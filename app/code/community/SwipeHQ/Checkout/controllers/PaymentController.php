@@ -56,8 +56,6 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
                 }
             } else {
             	Mage::getSingleton('checkout/session')->addError('Swipe does not support currency: '.$currency.'. Swipe supports these currencies: '.join(', ', $acceptedCurrencies).'.');
-            	session_write_close(); // required to have message show up after redirect
-                Mage_Core_Controller_Varien_Action::_redirect('checkout/onepage/failure', array('_secure'=>true));
                 return;
             }
             
@@ -70,27 +68,34 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
 	// The response action is triggered when your gateway sends back a response after processing the customer's payment
 	public function responseAction() {
             $request = $_REQUEST;
-		
+            
+            $transaction_id = $request['transaction_id'];
+            $testMode = Mage::getStoreConfig('payment/swipehq/test_mode');
+            $order = Mage::getModel('sales/order');
+            
             //Swipe callback
             if (isset($request['td_user_data'])) {
                 $order_id = $request['td_user_data'];
 
-                $is_verified = $this->_verifyTransaction($request['transaction_id']);
-                if ($request['transaction_approved'] == 'yes' && $is_verified) {
+                $is_verified = $this->_verifyTransaction($transaction_id);
+                if ($is_verified) {
                     // Payment was successful, so update the order's state, send order email and move to the success page
                     
-                    $order = Mage::getModel('sales/order');
                     $order->loadByIncrementId($order_id);
                     if (!$order->getId()) {
                         Mage::throwException('No order for processing found');
                     }
                     
                     $order_status = Mage::getStoreConfig('payment/swipehq/paid_order_status');
-                    if (Mage::getStoreConfig('payment/swipehq/test_mode')) {
+                    if ($testMode) {
                         $order_status = Mage::getStoreConfig('payment/swipehq/test_order_status');
                     }
 
-                    $order->setState($order_status, true, 'Gateway has authorized the payment.');
+                    if($order->isStateProtected($order_status)){
+                    	Mage::throwException('Swipe configuration error: "Paid Order Status" must not be: "'.$order_status.'". Failed to change state.');
+                    }else{
+                    	$order->setState($order_status, true, 'Swipe has authorized the payment.');
+                    }
 
                     $order->sendNewOrderEmail();
                     $order->setEmailSent(true);
@@ -98,11 +103,11 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
                     $order->save();
 
                     Mage::getSingleton('checkout/session')->unsQuoteId();
-                } elseif ($request['transaction_approved'] == 'no' && $is_verified) {
+                } else {
                     // There is a problem in the response we got
                     $this->cancelAction();
-                    Mage_Core_Controller_Varien_Action::_redirect('checkout/onepage/failure', array('_secure'=>true));
                 }
+                die('LPN OK, transaction_id: '.$transaction_id.', is_verified: '.($is_verified?'y':'n'));
                 
             //Result page (user redirect)
             } elseif (isset($request['result']) && isset($request['user_data'])) { 
@@ -148,8 +153,10 @@ class SwipeHQ_Checkout_PaymentController extends Mage_Core_Controller_Front_Acti
             if (!empty($response)) {
                 $response_data = json_decode($response);
 
-                if ($response_data->response_code == 200 && $response_data->data->transaction_id == $transaction_id) {
-                    return true;
+                if ($response_data->response_code == 200 && 
+                	$response_data->data->transaction_id == $transaction_id && 
+                	$response_data->data->transaction_approved == 'yes') {
+                    	return true;
                 }
             }
             return false;
