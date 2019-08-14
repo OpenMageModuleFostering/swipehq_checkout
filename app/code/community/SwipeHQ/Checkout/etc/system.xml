@@ -5,7 +5,95 @@
       <groups>
         <swipehq translate="label comment" module="paygate">
           <label>Swipe Checkout</label>
-          <comment><![CDATA[<a href="http://www.swipehq.com/support/support_detail.php?cat=General+Questions&title=Becoming+a+Swipe+HQ+Checkout+merchant" target="_blank">Click here to see how to become a SwipeHQ Checkout merchant</a>]]></comment>
+          <comment><![CDATA[<a href="http://www.swipehq.com/support/support_detail.php?cat=General+Questions&title=Becoming+a+Swipe+HQ+Checkout+merchant" target="_blank">Click here to see how to become a SwipeHQ Checkout merchant</a>
+              <script>
+                  function check_config(){
+                      var elementToRemove = document.getElementById("check_config_results");
+                      if(elementToRemove!=null && typeof(elementToRemove)!="undefined"){
+                          $(elementToRemove).remove();
+                      }
+              
+                      var mainForm = document.getElementById("payment_swipehq");
+                      var elementToInsert = document.createElement("div");
+                      elementToInsert.setAttribute("id", "check_config_results");
+                      elementToInsert.setAttribute("style", "width:100%;height:100%");
+                      mainForm.appendChild(elementToInsert);
+                      elementToInsert.innerHTML = "<p style=\"line-height:1;font-size:50px\">Checking config, please wait...</p>";
+              
+                      var merchantId = $("payment_swipehq_merchant_id").value;
+                      var apiKey = $("payment_swipehq_api_key").value;
+                      var apiURL = $("payment_swipehq_api_url").value;
+                      var paymentURL = $("payment_swipehq_payment_page_url").value;
+              
+              
+                      var currentURL = document.URL;
+                      var urlToLoad = null;
+                      var indexFound = currentURL.indexOf("index.php");
+              
+                      if(indexFound!=-1){
+                          urlToLoad = currentURL.substring(0, indexFound)+"app/code/community/SwipeHQ/Checkout/etc/test-plugin.php?merchant_id="+merchantId+"&api_key="+apiKey+"&api_url="+apiURL+"&payment_page_url="+paymentURL;
+                      }
+              
+                      
+
+                      
+                      if(urlToLoad!=null){
+                          processAjax(urlToLoad);
+                      }
+
+                      function processAjax(url) {
+                          var req = null;
+                          if (window.XMLHttpRequest) { // Non-IE browsers
+                              req = new XMLHttpRequest();
+                              try {
+                                  req.onreadystatechange = targetDiv;
+                                  req.open("GET", url, true);
+                                  req.send(null);
+                              } catch (e) {
+                                  alert(e);
+                              }
+                              
+                          } else if (window.ActiveXObject) { // IE
+                              var req = new ActiveXObject("Microsoft.XMLHTTP");
+                              if (req) {
+                                  req.onreadystatechange = targetDiv;
+                                  req.open("GET", url, true);
+                                  req.send();
+                              }
+                          }
+              
+              
+                          function targetDiv() {
+                              if(req!=null){
+                                  if (req.readyState == 4) { // Complete
+                                      if (req.status == 200) { // OK response
+                                          document.getElementById("check_config_results").innerHTML = req.responseText;
+                                      }
+                                      else{
+                                          alert("problem");
+                                      }
+                                  }
+                              }
+                          }
+                      }
+
+                        
+                  }
+              
+                  document.observe("dom:loaded", function(){
+                      var mainForm = document.getElementById("payment_swipehq");
+                      var buttonToInsert = document.createElement("input");
+                      buttonToInsert.setAttribute("type", "button");
+                      buttonToInsert.setAttribute("value", "Check Config");
+                      buttonToInsert.setAttribute("name", "checkconfig");
+                      buttonToInsert.setAttribute("onclick", "check_config()");
+                      buttonToInsert.setAttribute("style", "margin-top:30px");
+                      mainForm.appendChild(buttonToInsert);
+                      
+                  });
+              </script>
+          ]]>
+          </comment>
           <frontend_type>text</frontend_type>
           <sort_order>1</sort_order>
           <show_in_default>1</show_in_default>

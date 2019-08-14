@@ -1,6 +1,6 @@
-Hikashop Swipe plugin
+Swipe HQ Checkout plugin for Magento E-Commerce
 
-Version:	1.3.0 / 18 Sep 2013
+Version:	1.4.0 / 20 Sep 2013
 Copyright:	(c) 2012-2013, Optimizer Ltd.
 Link:		http://www.swipehq.com/checkout/
 
@@ -38,7 +38,7 @@ INSTALLATION
 NOTES
 ---
 * Magento must be configured to use a currency that your Swipe Merchant Account supports for customers to be able to use Swipe to be a payment option,
-	see Settings -> API Credentials for a list of currencies your Merchant Account supports. And see System -> Manage Currency -> Symboles
+	see Settings -> API Credentials for a list of currencies your Merchant Account supports. And see System -> Manage Currency -> Symbols
 	to see which currency your Magento is using.
 * Magento allows this plugin to set the order state to only a limited subset of all order states. You must mark orders as complete manually once you ship
 	them.
@@ -52,4 +52,5 @@ CHANGE LOG
 - fixing bug where magento does not allow you to set an order's state to complete
 - tested against Magento-1.7.0.2
 
-
+1.4.0:
+- Added test configuration button, fixed bug in package.xml file and added the missing file Permittedorderstates.php in Model directory

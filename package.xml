@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
 	<name>SwipeHQ_Checkout</name>
-	<version>1.3.0</version>
+	<version>1.4.0</version>
 	<stability>stable</stability>
 	<license>GNU General Public License (GPL)</license>
 	<channel>community</channel>
@@ -16,7 +16,7 @@
 			<email>support@swipehq.com</email>
 		</author>
 	</authors>
-	<date>2013-09-18</date>
+	<date>2013-09-20</date>
 	<time>00:00:00</time>
 	<contents>
 		<target name="magecommunity">
@@ -27,13 +27,15 @@
 					</dir>
 					<dir name="Model">
 						<file name="Standard.php" hash="29daa1223e187ce11a86831cd67984b5" />
+                                                <file name="Permittedorderstates.php" hash="eccc62e6b03420d9b124bb083e8c8e6b" />
 					</dir>
 					<dir name="controllers">
-						<file name="PaymentController.php" hash="c235c54ee5f74593c6f94cafcbf385f0" />
+						<file name="PaymentController.php" hash="2fe38578c75addf07ab085bc9f915857" />
 					</dir>
 					<dir name="etc">
-						<file name="config.xml" hash="d469840c842a7ce1fa6125a36f9f5a6a" />
-						<file name="system.xml" hash="6e106a4b51f5ddf7337b218f003168b9" />
+						<file name="config.xml" hash="7dde071fe23e46ecdaf812432bdb5dde" />
+						<file name="system.xml" hash="175df78d0682e6df02873879b7ac37c6" />
+                                                <file name="test-plugin.php" hash="6ac73d7459e6c14a8a521dd6578465e5" />
 					</dir>
 				</dir>
 			</dir>
@@ -44,7 +46,7 @@
 					<dir name="default">
 						<dir name="template">
 							<dir name="swipehq">
-								<file name="redirect.phtml" hash="3d081595a365f5332d522c876f1f0541" />
+								<file name="redirect.phtml" hash="20a654b8ea3b604860316f81c1abd35d" />
 							</dir>
 						</dir>
 					</dir>
